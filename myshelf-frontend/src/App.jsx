@@ -6,35 +6,10 @@ import BorrowBook from "./components/BorrowBook.jsx";
 import ReturnBook from "./components/ReturnBook.jsx";
 
 // Dummy data (kan je vervangen met fetch vanaf backend)
-const dummyBooks = [
-  {
-    isbn: "978-0-123456-78-9",
-    title: "Python Basics",
-    author: "John Doe",
-    available: true,
-    borrowed_by: null,
-  },
-  {
-    isbn: "978-0-987654-32-1",
-    title: "FastAPI Guide",
-    author: "Jane Smith",
-    available: false,
-    borrowed_by: 1,
-  },
-];
 
-const dummyMembers = [
-  {
-    id: 1,
-    name: "Alice",
-    email: "alice@example.com",
-    borrowed_books: ["978-0-987654-32-1"],
-  },
-  { id: 2, name: "Bob", email: "bob@example.com", borrowed_books: [] },
-];
 
 export default function App() {
-  const [page, setPage] = useState("home"); // "home", "books", "members", "borrow", "return"
+  const [page, setPage] = useState("home"); 
 
   // Voor navigatie vanuit header
   const handleNavClick = (target) => {
@@ -76,8 +51,8 @@ export default function App() {
 
       {/* Pagina content */}
       <main>
-        {page === "books" && <BookList books={dummyBooks} />}
-        {page === "members" && <MemberList members={dummyMembers} />}
+        {page === "books" && <BookList />}
+        {page === "members" && <MemberList />}
         {page === "borrow" && <BorrowBook />}
         {page === "return" && <ReturnBook />}
         {page === "home" && (

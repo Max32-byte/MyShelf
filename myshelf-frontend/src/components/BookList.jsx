@@ -4,6 +4,17 @@ export default function BookList() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [query, setQuery] = useState("");
+
+  const getfilteredBooks = (query, books) => {
+    if (!query) return books;
+    return books.filter(
+      (book) =>
+        book.title.toLowerCase().includes(query.toLowerCase()) ||
+        book.authors.join(", ").toLowerCase().includes(query.toLowerCase()) ||
+        (book.isbn && book.isbn.toLowerCase().includes(query.toLowerCase())),
+    );
+  };
 
   const bookListApi = "http://localhost:8000/books";
 
@@ -39,6 +50,8 @@ export default function BookList() {
   if (loading) return <p style={{ padding: "32px" }}>Boeken laden...</p>;
   if (error) return <p style={{ padding: "32px" }}>Fout bij laden: {error}</p>;
 
+  const filteredBooks = getfilteredBooks(query, books);
+
   return (
     <section
       style={{
@@ -48,6 +61,31 @@ export default function BookList() {
       }}
     >
       <h2 style={{ color: "#064e3b", marginBottom: "24px" }}>Alle Boeken</h2>
+      <label
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "6px",
+          fontSize: "14px",
+          fontWeight: 500,
+          color: "#374151",
+        }}
+      >
+        Search
+        <input
+          type="text"
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search books..."
+          style={{
+            padding: "10px 12px",
+            borderRadius: "8px",
+            border: "1px solid #D1D5DB",
+            fontSize: "14px",
+            outline: "none",
+            transition: "border 0.2s ease",
+          }}
+        />
+      </label>
 
       {books.length === 0 ? (
         <p>Geen boeken gevonden.</p>
@@ -59,7 +97,7 @@ export default function BookList() {
             gap: "16px",
           }}
         >
-          {books.map((book, index) => (
+          {filteredBooks.map((book, index) => (
             <div
               key={book.isbn || book.title || index}
               style={{
@@ -76,11 +114,15 @@ export default function BookList() {
                 {book.title || "Titel onbekend"}
               </h3>
               <p style={{ margin: "0 0 10px" }}>
-                <strong>Auteur:</strong> {book.author || "Onbekend"}
+                <strong>Auteur:</strong> {book.authors || "Onbekend"}
               </p>
               <p style={{ margin: "0 0 10px", fontSize: "14px" }}>
                 <strong>ISBN:</strong> {book.isbn || "Onbekend"}
               </p>
+              <p style={{ margin: "0 0 10px", fontSize: "14px" }}>
+                <strong>Beschrijving:</strong> {book.description || "Onbekend"}
+              </p>
+              <img src={book.covers?.medium || ""} alt="" />
 
               <p style={{ margin: 0 }}>
                 <strong>Status:</strong>{" "}
